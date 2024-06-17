@@ -1,10 +1,9 @@
 # Vault SSH OTP Demo
 
 ### Overview
-The One-Time SSH Password (OTP) SSH secrets engine type allows a Vault server to issue a One-Time Password every time a client wants to SSH into a remote host using a helper command on the remote host to perform verification.
+The signed SSH certificates is the simplest and most powerful in terms of setup complexity and in terms of being platform agnostic. By leveraging Vault's powerful CA capabilities and functionality built into OpenSSH, clients can SSH into target hosts using their own local SSH keys.
 
-- https://developer.hashicorp.com/vault/tutorials/secrets-management/ssh-otp
-- https://developer.hashicorp.com/vault/docs/secrets/ssh/one-time-ssh-passwords
+- https://developer.hashicorp.com/vault/docs/secrets/ssh/signed-ssh-certificates
 
 
 ### Diagram
