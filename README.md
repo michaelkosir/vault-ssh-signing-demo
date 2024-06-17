@@ -1,4 +1,4 @@
-# Vault SSH OTP Demo
+# Vault SSH Signing Demo
 
 ### Overview
 The signed SSH certificates is the simplest and most powerful in terms of setup complexity and in terms of being platform agnostic. By leveraging Vault's powerful CA capabilities and functionality built into OpenSSH, clients can SSH into target hosts using their own local SSH keys.
