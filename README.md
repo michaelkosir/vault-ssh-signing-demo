@@ -38,7 +38,7 @@ vault write ssh/roles/demo - <<EOF
   "algorithm_signer": "rsa-sha2-256",
   "allow_user_certificates": true,
   "allowed_users": "ubuntu",
-  "allowed_extensions": "permit-pty,permit-port-forwarding",
+  "allowed_extensions": "permit-pty,permit-port-forwarding,permit-user-rc,permit-X11-forwarding,permit-agent-forwarding",
   "default_extensions": {
     "permit-pty": ""
   },
@@ -54,6 +54,7 @@ vault write ssh/roles/demo2 - <<EOF
   "algorithm_signer": "rsa-sha2-256",
   "allow_user_certificates": true,
   "allowed_users": "ubuntu",
+  "allowed_extensions": "permit-pty,permit-port-forwarding,permit-user-rc,permit-X11-forwarding,permit-agent-forwarding",
   "allowed_critical_options": "force-command",
   "default_critical_options": {
     "force-command": "cat /var/log/example.log"
@@ -74,25 +75,20 @@ export REMOTE=$(terraform output -raw demo_ip)
 ```
 
 ### Vault Usage
-```shell 
-ssh-keygen -t rsa -C "user@example.com" -f $HOME/.ssh/id_rsa_demo
+```shell
+ssh-keygen -t rsa -C "user@example.com" -f $HOME/.ssh/id_rsa
 
 # standard shell
-vault write -field=signed_key ssh/sign/demo public_key=@$HOME/.ssh/id_rsa_demo.pub > $HOME/.ssh/id_rsa_demo-cert1.pub
+vault write -field=signed_key ssh/sign/demo public_key=@$HOME/.ssh/id_rsa.pub > $HOME/.ssh/id_rsa-cert1.pub
 
-ssh -i $HOME/.ssh/id_rsa_demo-cert1.pub -i $HOME/.ssh/id_rsa_demo ubuntu@$REMOTE
+ssh -i $HOME/.ssh/id_rsa-cert1.pub -i $HOME/.ssh/id_rsa ubuntu@$REMOTE
 
 # force command
-vault write -field=signed_key ssh/sign/demo2 public_key=@$HOME/.ssh/id_rsa_demo.pub > $HOME/.ssh/id_rsa_demo-cert2.pub
-
-ssh-keygen -Lf $HOME/.ssh/id_rsa_demo-cert2.pub
-
-ssh -i $HOME/.ssh/id_rsa_demo-cert2.pub -i $HOME/.ssh/id_rsa_demo ubuntu@$REMOTE
+vault ssh -mode=ca -role=demo2 ubuntu@$REMOTE
 ```
 
 ### Cleanup
 ```shell
 terraform destroy -var="vault_addr=$VAULT_ADDR"
 terraform -chdir=vault destroy
-rm $HOME/.ssh/*demo*
 ```
