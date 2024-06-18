@@ -78,8 +78,10 @@ export REMOTE=$(terraform output -raw demo_ip)
 ```shell
 ssh-keygen -t rsa -C "user@example.com" -f $HOME/.ssh/id_rsa
 
-# standard shell
+# manual
 vault write -field=signed_key ssh/sign/demo public_key=@$HOME/.ssh/id_rsa.pub > $HOME/.ssh/id_rsa-cert1.pub
+
+ssh-keygen -Lf ~/.ssh/id_rsa-cert1.pub
 
 ssh -i $HOME/.ssh/id_rsa-cert1.pub -i $HOME/.ssh/id_rsa ubuntu@$REMOTE
 
