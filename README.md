@@ -49,7 +49,7 @@ vault write ssh/roles/demo - <<EOF
 EOF
 
 # force command
-vault write ssh/roles/demo2 - <<EOF
+vault write ssh/roles/forcecmd - <<EOF
 {
   "algorithm_signer": "rsa-sha2-256",
   "allow_user_certificates": true,
@@ -85,8 +85,9 @@ ssh-keygen -Lf ~/.ssh/id_rsa-cert1.pub
 
 ssh -i $HOME/.ssh/id_rsa-cert1.pub -i $HOME/.ssh/id_rsa ubuntu@$REMOTE
 
-# force command
-vault ssh -mode=ca -role=demo2 ubuntu@$REMOTE
+# all in one
+vault ssh -mode=ca -role=demo ubuntu@$REMOTE
+vault ssh -mode=ca -role=forcecmd ubuntu@$REMOTE
 ```
 
 ### Cleanup
